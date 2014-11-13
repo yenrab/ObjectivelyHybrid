@@ -66,7 +66,17 @@
 -(void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
     NSDictionary * sentData = (NSDictionary*)message.body;
     int aCount = [sentData[@"count"] intValue];
-    [_appWebView evaluateJavaScript:[NSString stringWithFormat:@"storeAndShow(%d)",aCount + 1] completionHandler:nil];
+    [_appWebView evaluateJavaScript:[NSString stringWithFormat:@"storeAndShow(%d)",aCount + 1] completionHandler:^(id JSReturnValue, NSError* error){
+        if (error) {
+            NSLog(@"error: %@", error.description);
+        }
+        else if (JSReturnValue != nil){
+            NSLog(@"returned value: %@",JSReturnValue);
+        }
+        else{
+            NSLog(@"no return from JS");
+        }
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
